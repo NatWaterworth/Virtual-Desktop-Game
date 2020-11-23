@@ -19,9 +19,9 @@ MonoBehaviour:
     width: 2560
     height: 1357
   m_ShowMode: 4
-  m_Title: Animator
+  m_Title: Hierarchy
   m_RootView: {fileID: 2}
-  m_MinSize: {x: 875, y: 442}
+  m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
   m_Maximized: 1
 --- !u!114 &2
@@ -46,7 +46,7 @@ MonoBehaviour:
     y: 0
     width: 2560
     height: 1357
-  m_MinSize: {x: 875, y: 442}
+  m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
   m_UseTopView: 1
   m_TopViewHeight: 30
@@ -118,10 +118,10 @@ MonoBehaviour:
     y: 30
     width: 2560
     height: 1307
-  m_MinSize: {x: 709, y: 392}
-  m_MaxSize: {x: 18004, y: 14042}
+  m_MinSize: {x: 680, y: 242}
+  m_MaxSize: {x: 16005, y: 8042}
   vertical: 1
-  controlID: 7906
+  controlID: 338
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -144,10 +144,10 @@ MonoBehaviour:
     y: 0
     width: 2560
     height: 1307
-  m_MinSize: {x: 709, y: 392}
-  m_MaxSize: {x: 18004, y: 14042}
+  m_MinSize: {x: 680, y: 242}
+  m_MaxSize: {x: 16005, y: 8042}
   vertical: 0
-  controlID: 7907
+  controlID: 339
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -167,8 +167,8 @@ MonoBehaviour:
     y: 0
     width: 615
     height: 1307
-  m_MinSize: {x: 201, y: 221}
-  m_MaxSize: {x: 4001, y: 4021}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 15}
   m_Panes:
   - {fileID: 15}
@@ -195,10 +195,10 @@ MonoBehaviour:
     y: 0
     width: 1378
     height: 1307
-  m_MinSize: {x: 232, y: 392}
-  m_MaxSize: {x: 10002, y: 14042}
+  m_MinSize: {x: 204, y: 242}
+  m_MaxSize: {x: 8004, y: 8042}
   vertical: 1
-  controlID: 7878
+  controlID: 278
 --- !u!114 &9
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -223,7 +223,7 @@ MonoBehaviour:
   m_MinSize: {x: 204, y: 121}
   m_MaxSize: {x: 8004, y: 4021}
   vertical: 0
-  controlID: 7879
+  controlID: 279
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -288,7 +288,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 12006, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: ProjectBrowser
+  m_Name: ConsoleWindow
   m_EditorClassIdentifier: 
   m_Children: []
   m_Position:
@@ -297,14 +297,14 @@ MonoBehaviour:
     y: 926
     width: 1378
     height: 381
-  m_MinSize: {x: 232, y: 271}
-  m_MaxSize: {x: 10002, y: 10021}
-  m_ActualView: {fileID: 19}
+  m_MinSize: {x: 102, y: 121}
+  m_MaxSize: {x: 4002, y: 4021}
+  m_ActualView: {fileID: 20}
   m_Panes:
   - {fileID: 19}
   - {fileID: 20}
-  m_Selected: 0
-  m_LastSelected: 1
+  m_Selected: 1
+  m_LastSelected: 0
 --- !u!114 &13
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -368,11 +368,11 @@ MonoBehaviour:
   m_TextureFilterMode: 0
   m_TextureHideFlags: 61
   m_RenderIMGUI: 1
-  m_MaximizeOnPlay: 1
+  m_MaximizeOnPlay: 0
   m_UseMipMap: 0
   m_VSyncEnabled: 0
   m_Gizmos: 0
-  m_Stats: 1
+  m_Stats: 0
   m_SelectedSizes: 07000000000000000000000000000000000000000000000000000000000000000000000000000000
   m_ZoomArea:
     m_HRangeLocked: 0
@@ -451,9 +451,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 28560000
-      m_LastClickedID: 22056
-      m_ExpandedIDs: 08fbffff2856000064570000a6570000f8580000
+      m_SelectedIDs: 
+      m_LastClickedID: 0
+      m_ExpandedIDs: 08fbffff6c570000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -658,7 +658,7 @@ MonoBehaviour:
   m_Rotation:
     m_Target: {x: -0.015706988, y: -0.97961247, z: 0.08425608, w: -0.18187876}
     speed: 2
-    m_Value: {x: 0.015706988, y: 0.97961247, z: -0.08425609, w: 0.18187876}
+    m_Value: {x: -0.015706468, y: -0.97958, z: 0.08425329, w: -0.18187274}
   m_Size:
     m_Target: 18.691515
     speed: 2
@@ -726,21 +726,21 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Matching-Game/Prefabs
+    - Assets/RW/Scripts
     m_Globs: []
   m_ViewMode: 1
   m_StartGridSize: 50
   m_LastFolders:
-  - Assets/Matching-Game/Prefabs
+  - Assets/RW/Scripts
   m_LastFoldersGridSize: 50
   m_LastProjectPath: C:\Users\natmi\OneDrive\Documents\GitHub\Virtual-Desktop-Game\Unity3D
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 345d0000
-    m_LastClickedID: 23860
-    m_ExpandedIDs: 000000001c5d00002a5d000000ca9a3b
+    scrollPos: {x: 0, y: 44}
+    m_SelectedIDs: 8a7a0000
+    m_LastClickedID: 31370
+    m_ExpandedIDs: 00000000245d0000285d00002e5d000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -768,7 +768,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000001c5d000000ca9a3b
+    m_ExpandedIDs: 00000000245d000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -793,9 +793,9 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: 
-    m_LastClickedInstanceID: 0
-    m_HadKeyboardFocusLastEvent: 0
+    m_SelectedInstanceIDs: fc400000
+    m_LastClickedInstanceID: 16636
+    m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: bc4d00009ecd0100e8510000e65e0000a2cd01000a84040006840400f64500000e620000ba4e000000dd0700ec6200001c3e000072940800f2200200ec540000606300002e5e0000b24200004a600000a04d0000845e0000864e00002c400000de530000146200006c630000a6660000ce6200009c310200e03a01008cc905005e7f00006e9800004a98000000300300567f0000f40f0400d68600009aa3020096a3020058ab0000765d0000ba5c0000c6c70100b2a000005adf0000a89e000052e700004add030052dd030048dd030046dd030044b7260040b7260060ef00005cef0000085d03002aef2f009cf60000d89500000c960100ea9a0100fe970100f2970100fe9a0100da9a0100fa9a0100c29b0100460a01001ce700005a0e0100de220100da0b0100f80c0100f00c010002e5000004e50000ea02010098010100e08801002abb0600024e0100000000004c500000525000004a50000094630000fe080100365b0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0

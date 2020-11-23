@@ -1,10 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
 
 //Checks player inputs for matching with match objects
 public class MatchArea : MonoBehaviour
 {
+    
+    //Port vairables - Unity <-> Python
+    Thread receiveThread; 
+    UdpClient client; 
+    int port; 
+
     //Match variables
     [SerializeField]
     string colourName;
@@ -16,7 +27,42 @@ public class MatchArea : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        //Setup port for receiving information
+        port = 5065;
+        InitUDP(); 
+    }
+
+    
+    //Initialises Thread to run parallel to the game
+    private void InitUDP()
+    {
+        print("UDP Initialized");
+
+        receiveThread = new Thread(new ThreadStart(ReceiveData));
+        receiveThread.IsBackground = true; //Runs parallel to the game
+        receiveThread.Start();
+    }
+
+    //Recieves information from port on a thread running parallel to the game.
+    private void ReceiveData()
+    {
+        client = new UdpClient(port); //assign port
+        while (true) //set to variable if you don't want data to be recieved.
+        {
+            try
+            {
+                IPEndPoint anyIP = new IPEndPoint(IPAddress.Parse("0.0.0.0"), port); //where inputs are declared
+                byte[] data = client.Receive(ref anyIP); //data recieved stored in binary form
+
+                string text = Encoding.UTF8.GetString(data); //data encoded as utf-8 string format
+                print("OpenCV-Python Information: " + text);
+
+            }
+            catch (Exception e)
+            {
+                print(e.ToString()); //log exceptions to console
+            }
+        }
     }
 
     //Checks if object matches up with user inputs. E.g. Red input, left side or sad face.

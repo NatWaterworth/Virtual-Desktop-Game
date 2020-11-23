@@ -6,7 +6,8 @@ public class MatchObject : MonoBehaviour
 {
 
     bool canBeMatched = false;
-
+    [SerializeField]
+    bool rotate = true;
     const int matchScoreIncrease = 10;
     
     float speed; // control object velocity magnitude
@@ -57,7 +58,8 @@ public class MatchObject : MonoBehaviour
     private void FixedUpdate()
     {
         rb.velocity = dir * speed;
-        transform.rotation *= Quaternion.Euler(Vector3.one);
+        if(rotate)
+            transform.rotation *= Quaternion.Euler(Vector3.one);
     }
 
     public void SetSpeed(float newSpeed)
@@ -70,16 +72,18 @@ public class MatchObject : MonoBehaviour
         dir = newDir;
     }
 
-    private void OnTriggerEnter(Collider other)
+    //Whist this object is in a matchable area check for player input
+    private void OnTriggerStay(Collider other)
     {
         //This object is in a region in which it can be matched
         if (other.GetComponent<MatchArea>())
         {
-            canBeMatched = true;
-            if (!beenMatched)
+            //Check if correct input has been given
+            if (GetComponent<MatchArea>() != null) //change
             {
                 SuccessfulMatch();
             }
+
         }
     }
 
@@ -89,7 +93,6 @@ public class MatchObject : MonoBehaviour
         //This object is leaving a region in which it can be matched
         if (other.GetComponent<MatchArea>() && !beenMatched)
         {
-            canBeMatched = false;
             NoMatch();
         }
     }

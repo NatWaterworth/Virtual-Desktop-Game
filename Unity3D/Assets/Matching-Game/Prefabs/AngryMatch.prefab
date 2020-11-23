@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5899098508863619421}
   - component: {fileID: 3619791075919014500}
   - component: {fileID: 89800696562790878}
+  - component: {fileID: 4090676286629840188}
   m_Layer: 0
   m_Name: AngryMatch
   m_TagString: Untagged
@@ -184,6 +185,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15aafbba29fcbd5498bcc5af91124ab4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rotate: 0
 --- !u!65 &89800696562790878
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -197,3 +199,19 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 4.7984, y: 2.3943315, z: 0.00000057085305}
   m_Center: {x: 0.05469754, y: 0, z: 0.00000028542652}
+--- !u!54 &4090676286629840188
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5899098508863619418}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0

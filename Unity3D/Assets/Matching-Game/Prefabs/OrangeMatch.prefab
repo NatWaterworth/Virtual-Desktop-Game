@@ -223,5 +223,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotate: 1
-  colourName: Orange
+  colourName: Purple
   sideOfScreen: '?'
+  alternateMeshes:
+  - {fileID: 4300000, guid: 8b680102ab716084ebf7f80440980c53, type: 3}
+  - {fileID: 4300000, guid: bc3adbc16e6ecae4eb2f8dc7ffa2e5a4, type: 3}
+  - {fileID: 4300000, guid: ff934fa4e02d1784d9a324b0f2923a65, type: 3}
+  - {fileID: 4300000, guid: 0919328fd339ae24ea33b488adfb1ebd, type: 3}

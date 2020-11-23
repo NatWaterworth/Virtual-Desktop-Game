@@ -10,10 +10,17 @@ public class ColourMatch : MatchObject
     [SerializeField]
     string sideOfScreen;
 
+    [SerializeField]
+    Mesh[] alternateMeshes;
+
     // Start is called before the first frame update
     protected override void Start()
     {
         base.Start();
+
+        //Set a random mesh from stored possible meshes
+        if (GetComponent<MeshFilter>() != null)
+            GetComponent<MeshFilter>().mesh = alternateMeshes[Random.Range(0, alternateMeshes.Length)];
     }
 
     protected override void FixedUpdate()

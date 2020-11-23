@@ -1891,7 +1891,6 @@ MonoBehaviour:
   objectSpeed: 0.4
   subSpawners:
   - {fileID: 1800316699}
-  - {fileID: 1020471299}
 --- !u!4 &189034407
 Transform:
   m_ObjectHideFlags: 0
@@ -10938,7 +10937,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   matchObjects:
   - {fileID: 2618300429849698754, guid: b73220e58a36ed745a65c7494572ee8a, type: 3}
-  - {fileID: -4342101873624554246, guid: cef6665d5bcbfbb4fbadf5eac03a4faf, type: 3}
   - {fileID: 6389852601812268699, guid: c18c8419c86b2794596649fceb1198e1, type: 3}
   spawnPositions:
   - sideName: Right

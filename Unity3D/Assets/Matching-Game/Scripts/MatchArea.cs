@@ -57,6 +57,8 @@ public class MatchArea : MonoBehaviour
                 string text = Encoding.UTF8.GetString(data); //data encoded as utf-8 string format
                 print("OpenCV-Python Information: " + text);
 
+                CheckInput(text);
+
             }
             catch (Exception e)
             {
@@ -82,6 +84,33 @@ public class MatchArea : MonoBehaviour
                 return true; // correct colour and side
         }
         return false;
+    }
+
+    void CheckInput(string text)
+    {
+        //Check for Colour Input
+        if (text.Contains("Blue"))
+        {
+            colourName = "Blue";
+        }
+        else if (text.Contains("Green"))
+        {
+            colourName = "Green";
+        }
+        else if (text.Contains("Orange"))
+        {
+            colourName = "Orange";
+        }
+
+        //check for Colour position
+        if (text.Contains("Right"))
+        {
+            sideOfScreen = "Right";
+        }
+        else if (text.Contains("Left"))
+        {
+            sideOfScreen = "Left";
+        }
     }
 
     // Update is called once per frame

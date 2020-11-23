@@ -9,7 +9,7 @@ public class MatchObject : MonoBehaviour
     [SerializeField]
     bool rotate = true;
     const int matchScoreIncrease = 10;
-    
+
     float speed; // control object velocity magnitude
     Rigidbody rb; // rigibody of match object to apply velocity to
     Vector3 dir; //direction of movement
@@ -17,7 +17,7 @@ public class MatchObject : MonoBehaviour
     bool beenMatched = false;
 
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
         //Ensure the match object has a rigidbody to apply movement to
         if (GetComponent<Rigidbody>() != null)
@@ -26,10 +26,12 @@ public class MatchObject : MonoBehaviour
             rb = gameObject.AddComponent<Rigidbody>();
 
         SetPhysics();
+
         SpawnEffect("SpawnEffect");
         //Apply growing effect - scaling up to size
         StartCoroutine(GrowToSize());
     }
+
     //Spawn VFX to help mask the instantiation of matching object
     void SpawnEffect(string path)
     {
@@ -55,7 +57,7 @@ public class MatchObject : MonoBehaviour
     }
 
     //Physics Update
-    private void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         rb.velocity = dir * speed;
         if(rotate)
@@ -73,22 +75,24 @@ public class MatchObject : MonoBehaviour
     }
 
     //Whist this object is in a matchable area check for player input
-    private void OnTriggerStay(Collider other)
+    protected virtual void OnTriggerStay(Collider other)
     {
         //This object is in a region in which it can be matched
         if (other.GetComponent<MatchArea>())
         {
             //Check if correct input has been given
-            if (GetComponent<MatchArea>() != null) //change
+            if (other.GetComponent<MatchArea>().CheckMatch(this) && !beenMatched) //change
             {
                 SuccessfulMatch();
+
+                beenMatched = true;
+                Debug.Log("Matched!");
             }
 
         }
     }
 
-
-    private void OnTriggerExit(Collider other)
+    protected virtual void OnTriggerExit(Collider other)
     {
         //This object is leaving a region in which it can be matched
         if (other.GetComponent<MatchArea>() && !beenMatched)

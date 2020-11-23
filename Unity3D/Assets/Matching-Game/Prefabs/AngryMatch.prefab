@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 5899098508863619423}
   - component: {fileID: 5899098508863619420}
   - component: {fileID: 5899098508863619421}
-  - component: {fileID: 3619791075919014500}
   - component: {fileID: 89800696562790878}
   - component: {fileID: 4090676286629840188}
+  - component: {fileID: -333044953442491536}
   m_Layer: 0
   m_Name: AngryMatch
   m_TagString: Untagged
@@ -173,19 +173,6 @@ MonoBehaviour:
   m_maskType: 0
   _SortingLayerID: 0
   _SortingOrder: 0
---- !u!114 &3619791075919014500
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5899098508863619418}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15aafbba29fcbd5498bcc5af91124ab4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rotate: 0
 --- !u!65 &89800696562790878
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -197,7 +184,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 4.7984, y: 2.3943315, z: 0.00000057085305}
+  m_Size: {x: 4.7984, y: 3.5, z: 0.00000057085305}
   m_Center: {x: 0.05469754, y: 0, z: 0.00000028542652}
 --- !u!54 &4090676286629840188
 Rigidbody:
@@ -215,3 +202,17 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!114 &-333044953442491536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5899098508863619418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a80fb4facb7f8e14c867df52eba18eb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotate: 0
+  emotion: Angry

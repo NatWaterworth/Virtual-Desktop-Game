@@ -8,9 +8,6 @@ public class Spawner : MonoBehaviour
      * Spawns matching objects ahead of the player which move towards the player
      */
 
-    //number of spawners
-    const int numSpawners = 2;
-
     //Timer to keep track of when objects spawn
     float timer = 0;
 
@@ -27,7 +24,7 @@ public class Spawner : MonoBehaviour
 
     //Sub spawners to spawn match objects
     [SerializeField]
-    SubSpawner[] subSpawners = new SubSpawner[numSpawners];
+    SubSpawner[] subSpawners;
 
     // Start is called before the first frame update
     void Start()
@@ -48,7 +45,7 @@ public class Spawner : MonoBehaviour
         if(timer >= beat)
         {
             //Pick random spawn
-            int objectMatchIndex = Random.Range(0, numSpawners);
+            int objectMatchIndex = Random.Range(0, subSpawners.Length);
             //Spawn Object from one of the spawners - at random.
             subSpawners[objectMatchIndex].SpawnObject(objectSpeed, player);
             //Reset timer

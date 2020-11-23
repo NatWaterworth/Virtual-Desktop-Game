@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 2327450747218840534}
   - component: {fileID: 2327450747215996834}
   - component: {fileID: 2327450747216666728}
-  - component: {fileID: 7038562605273353972}
   - component: {fileID: -6173862975134844663}
   - component: {fileID: 5247598588572037282}
   - component: {fileID: -4900567228109606451}
+  - component: {fileID: 2618300429849698754}
   m_Layer: 0
   m_Name: PurpleMatch
   m_TagString: Untagged
@@ -85,18 +85,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &7038562605273353972
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2327450747218985768}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15aafbba29fcbd5498bcc5af91124ab4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!135 &-6173862975134844663
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -222,3 +210,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &2618300429849698754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2327450747218985768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d29124929b3827468a3a976b117d954, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotate: 1
+  colourName: Purple
+  sideOfScreen: '?'

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class SubSpawner : MonoBehaviour
 {
-    const int spawnPointsNum = 3;
 
     //All matchable objects spawnable from this spawner
     [SerializeField]
@@ -12,7 +11,14 @@ public class SubSpawner : MonoBehaviour
 
     //All Spawn Positions that objects can spawn from
     [SerializeField]
-    Transform[] spawnPositions = new Transform[spawnPointsNum];
+    SpawnPoints[] spawnPositions;
+
+    [System.Serializable]
+    struct SpawnPoints
+    {
+        public string sideName;
+        public Transform spawnPositions;
+    }
 
     int objectMatchIndex = 0;
     int objectMatchSpawnPos = 0;
@@ -37,8 +43,11 @@ public class SubSpawner : MonoBehaviour
         objectMatchSpawnPos = Random.Range(0, spawnPositions.Length);
 
         //spawn object
-        MatchObject obj = Instantiate(matchObjects[objectMatchIndex], spawnPositions[objectMatchSpawnPos].position, Quaternion.LookRotation(-player.transform.position,Vector3.up), null);
+        MatchObject obj = Instantiate(matchObjects[objectMatchIndex], spawnPositions[objectMatchSpawnPos].spawnPositions.position, Quaternion.LookRotation(-player.transform.position,Vector3.up), null);
         obj.SetSpeed(objectSpeed);
         obj.SetDirection(player.position - this.transform.position);
+
+        if (obj.GetType().Equals(typeof(ColourMatch)))
+            obj.GetComponent<ColourMatch>().SetScreenSide(spawnPositions[objectMatchSpawnPos].sideName);
     }
 }

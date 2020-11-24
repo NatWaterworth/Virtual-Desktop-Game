@@ -8,6 +8,9 @@ public class Spawner : MonoBehaviour
      * Spawns matching objects ahead of the player which move towards the player
      */
 
+    //Toggle for spawning objects
+    bool spawning;
+
     //Timer to keep track of when objects spawn
     float timer = 0;
 
@@ -39,19 +42,42 @@ public class Spawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Increment time per frame
-        timer += Time.deltaTime;
-
-        if(timer >= beat)
+        if (spawning)
         {
-            //Pick random spawn
-            int objectMatchIndex = Random.Range(0, subSpawners.Length);
-            //Spawn Object from one of the spawners - at random.
-            subSpawners[objectMatchIndex].SpawnObject(objectSpeed, player);
-            //Reset timer
-            timer = 0;
-        }
+            //Increment time per frame
+            timer += Time.deltaTime;
 
+            if (timer >= beat)
+            {
+                //Pick random spawn
+                int objectMatchIndex = Random.Range(0, subSpawners.Length);
+                //Spawn Object from one of the spawners - at random.
+                subSpawners[objectMatchIndex].SpawnObject(objectSpeed, player);
+                //Reset timer
+                timer = 0;
+            }
+        }
+    }
+
+    //Toggle Spawner ON/OFF
+    public void SetSpawnerActive(bool isOn)
+    {
+        spawning = isOn;
+    }
+
+    //Set spawner to match songs beat and object speed
+    public void SetSpawnerForSong(float newSpeed, float newBeat)
+    {
+        objectSpeed = newSpeed;
+        beat = newBeat;
+    }
+
+    //Returns the delay required for the first object match to line up with song beat
+    public float GetSongDelay()
+    {
+        // time = distance / velocity
+        Debug.Log("delay: " + Vector3.Distance(transform.position, player.transform.position) / objectSpeed + " dis: "+ Vector3.Distance(transform.position, player.transform.position) + "speed: "+ objectSpeed);
+        return Vector3.Distance(transform.position, player.transform.position) / objectSpeed;
     }
 
 }

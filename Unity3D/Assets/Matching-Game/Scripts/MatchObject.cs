@@ -59,7 +59,7 @@ public class MatchObject : MonoBehaviour
     //Physics Update
     protected virtual void FixedUpdate()
     {
-        rb.velocity = dir * speed;
+        rb.velocity = dir.normalized * speed;
         if(rotate)
             transform.rotation *= Quaternion.Euler(Vector3.one);
     }

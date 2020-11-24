@@ -45,6 +45,22 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     float gameSpeed;
 
+    //UI Gameobjects - enable and disable based on state
+    [SerializeField]
+    UIScreen[] guiScreens;
+
+    [SerializeField]
+    Spawner spawner;
+
+    string currentSong;
+
+    [System.Serializable]
+    struct UIScreen
+    {
+        public string name;
+        public GameObject gui;
+    }
+
     //Random number generator for deterministic values (used for songs matching sequences)
     PseudoRandomNumberGenerator songSequenceGenerator;
 
@@ -52,43 +68,128 @@ public class GameManager : MonoBehaviour
     {
         Playing,
         PauseMenu,
-        MainMenu
+        MainMenu,
+        EndOfLevel,
+        Settings,
+        Controls,
+        ChooseSong
     }
 
 
     // Start is called before the first frame update
     void Start()
     {
-        currentState = GameState.Playing;
+        currentState = GameState.ChooseSong;
         StartLevel();
-        SetupSong();
+        //SetupSong("Rock");
     }
 
     // Update is called once per frame
     void Update()
     {
+        //This acts as a finite state machine for the players state in the game
         switch (currentState)
-        {
+        {      
+            //Player interacts with the game to achieve a high score whilst the song is playing
             case GameState.Playing:
+                SetUIActiveOnly("HUD");
                 break;
+            //An interface that stops game time and allows the player to go back to main menu or resume
             case GameState.PauseMenu:
+                SetUIActiveOnly("Pause Menu");
                 break;
+            //An interface where the player can navigate to other states
             case GameState.MainMenu:
+                SetUIActiveOnly("Main Menu");
+                break;
+            //When the song is complete the player's score is highlighted and given a ranking
+            case GameState.EndOfLevel:
+                SetUIActiveOnly("Results");
+                break;
+            //An interface that instructs the player how to play the game
+            case GameState.Controls:
+                SetUIActiveOnly("HowToPlay");
+                break;
+            //Player can change sound levels with AR marker detection
+            case GameState.Settings:
+                SetUIActiveOnly("Settings");
+                break;
+            //Player chooses a song to play the game
+            case GameState.ChooseSong:
+                SetUIActiveOnly("Song Menu");
                 break;
         }
     }
 
-    void SetupSong()
+    //Set game to paused or play mode
+    public void PauseGame(bool paused)
     {
+        if (paused)
+            Time.timeScale = 0;
+        else
+            Time.timeScale = 1;
+    }
+
+    //Sets the level up to play a song
+    public void SetupLevel(string song)
+    {
+        currentState = GameState.Playing;
+        currentSong = song;
         songSequenceGenerator = PseudoRandomNumberGenerator.instance;
-        songSequenceGenerator.SetSeed(4);
         songSequenceGenerator.ResetSequence();
+        MatchSong matchSong = SoundManager.instance.GetMatchSong(currentSong);
+        spawner.SetSpawnerForSong(matchSong.objectSpeed, matchSong.beat);
+        spawner.SetSpawnerActive(true);
+        //delay song
+        StartCoroutine(SongIntro());
+    }
+
+    //start a song with a delay to match the input and countdown to song starting
+    IEnumerator SongIntro()
+    {
+        if (spawner != null && SoundManager.instance!=null)
+        {
+            float delay = spawner.GetSongDelay() + SoundManager.instance.GetMatchSong(currentSong).songDelay;
+            SoundManager.instance.PlaySoundEffect("Intro");
+            //Countdown
+            yield return new WaitForSeconds(delay / 4);
+            SoundManager.instance.PlaySoundEffect("Countdown");
+            yield return new WaitForSeconds(delay / 4);
+            SoundManager.instance.PlaySoundEffect("Countdown");
+            yield return new WaitForSeconds(delay / 4);
+            SoundManager.instance.PlaySoundEffect("Countdown");
+            yield return new WaitForSeconds(delay / 4);
+            SoundManager.instance.PlaySoundEffect("CountdownOver");
+
+            //Play song after delay to sync with match objects
+            SoundManager.instance.PlaySong(currentSong);       
+            //Stop match objects spawning when song stops
+            yield return new WaitForSeconds(SoundManager.instance.GetSongLength(currentSong)- (spawner.GetSongDelay()));
+            spawner.SetSpawnerActive(false);
+
+        }
+        else
+        {
+            Debug.LogError(spawner + " has not been assigned!");
+            yield return null;
+        }
     }
 
     //Resets player position to the start of the level
     void ResetToStartPosition()
     {
 
+    }
+
+    void SetUIActiveOnly(string name)
+    {
+        foreach(UIScreen screen in guiScreens)
+        {
+            if (screen.name == name)
+                screen.gui.SetActive(true);
+            else
+                screen.gui.SetActive(false);
+        }
     }
 
     //Spawns an object much the player must match up with the correct input

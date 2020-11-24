@@ -19,8 +19,8 @@ public class ColourMatch : MatchObject
         base.Start();
 
         //Set a random mesh from stored possible meshes
-        if (GetComponent<MeshFilter>() != null)
-            GetComponent<MeshFilter>().mesh = alternateMeshes[Random.Range(0, alternateMeshes.Length)];
+        if (GetComponent<MeshFilter>() != null && PseudoRandomNumberGenerator.instance!=null)
+            GetComponent<MeshFilter>().mesh = alternateMeshes[PseudoRandomNumberGenerator.instance.GetRandomNumber()%alternateMeshes.Length];
     }
 
     protected override void FixedUpdate()

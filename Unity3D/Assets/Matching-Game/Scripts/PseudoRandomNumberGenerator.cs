@@ -20,7 +20,7 @@ public class PseudoRandomNumberGenerator : MonoBehaviour
     [Tooltip("output = seed value * multiply value + offset value (mod modN) (for first iteration)")]
     const int multiplyValue = 16807;
     [Tooltip("the upper bound of the ouput values")]
-    const int modN = 2147483647;
+    const int modN = 2147483647, modN2 = 123532523, modN3 = 1235332, modN4 = 21121;
     [Tooltip("the number that determines variation of the sequence")]
     [SerializeField]
     int seed;
@@ -33,6 +33,11 @@ public class PseudoRandomNumberGenerator : MonoBehaviour
     int GetRandomSeededNumber()
     {
         currentNumber = ((currentNumber * multiplyValue) + offsetValue) % modN;
+        //randomise even and oddness by modulus with different sizes of modN
+        //applying modulus will be dependant on the size of current number ensuring odd and even isn't alternating
+        currentNumber = currentNumber % (modN2);
+        currentNumber = currentNumber % (modN3);
+        currentNumber = currentNumber % (modN4);
         return currentNumber;
     }
 
@@ -56,6 +61,8 @@ public class PseudoRandomNumberGenerator : MonoBehaviour
     public int GetRandomNumber()
     {
         GetRandomSeededNumber();
+        //Debug.Log("random number:" + currentNumber);
+        //Debug.Log("random number % 2:" + currentNumber%2);
         index++;
         return Mathf.Abs(currentNumber);
     }

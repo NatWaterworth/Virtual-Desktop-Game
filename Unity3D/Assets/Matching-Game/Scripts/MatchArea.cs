@@ -132,7 +132,7 @@ public class MatchArea : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.W))
         {
-            colourName = "Orange";
+            colourName = "Green";
             sideOfScreen = "Left";
         }
         if (Input.GetKey(KeyCode.E))
@@ -149,7 +149,7 @@ public class MatchArea : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.O))
         {
-            colourName = "Orange";
+            colourName = "Green";
             sideOfScreen = "Right";
         }
         if (Input.GetKey(KeyCode.P))

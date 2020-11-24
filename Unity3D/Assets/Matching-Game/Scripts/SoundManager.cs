@@ -8,8 +8,7 @@ public class SoundManager : MonoBehaviour
 
     public Sound[] sounds;
     public Sound[] music;
-
-
+    public MatchSong[] songs;
 
     // Start is called before the first frame update
     private void Awake()
@@ -53,6 +52,13 @@ public class SoundManager : MonoBehaviour
         PlaySound(name, music);
     }
 
+    //Play matching music
+    public void PlaySong(string name)
+    {
+        PlayMatchSong(name, songs);
+    }
+
+
     //Search for a sound to play
     void PlaySound(string name, Sound[] sounds)
     {
@@ -64,5 +70,18 @@ public class SoundManager : MonoBehaviour
             return;
         }
         s.source.Play();
+    }
+
+    //Search for a sound to play
+    void PlayMatchSong(string name, MatchSong[] songs)
+    {
+        //Find sound which has name
+        MatchSong s = Array.Find(songs, matchSong => matchSong.song.name == name);
+        if (s == null)
+        {
+            Debug.LogError("No Sound found called: " + name);
+            return;
+        }
+        s.song.source.Play();
     }
 }

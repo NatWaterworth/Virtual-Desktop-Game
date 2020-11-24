@@ -45,6 +45,9 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     float gameSpeed;
 
+    //Random number generator for deterministic values (used for songs matching sequences)
+    PseudoRandomNumberGenerator songSequenceGenerator;
+
     public enum GameState
     {
         Playing,
@@ -58,6 +61,7 @@ public class GameManager : MonoBehaviour
     {
         currentState = GameState.Playing;
         StartLevel();
+        SetupSong();
     }
 
     // Update is called once per frame
@@ -72,6 +76,13 @@ public class GameManager : MonoBehaviour
             case GameState.MainMenu:
                 break;
         }
+    }
+
+    void SetupSong()
+    {
+        songSequenceGenerator = PseudoRandomNumberGenerator.instance;
+        songSequenceGenerator.SetSeed(4);
+        songSequenceGenerator.ResetSequence();
     }
 
     //Resets player position to the start of the level
@@ -98,6 +109,8 @@ public class GameManager : MonoBehaviour
         ResetScore();
         SetHighScore();
     }
+
+
 
     //Return Transform of Player
     public Transform GetPlayerTransform()

@@ -3113,6 +3113,16 @@ MonoBehaviour:
     pitch: 1
     source: {fileID: 0}
     loop: 0
+  song:
+  - song:
+      name: 
+      clip: {fileID: 0}
+      volume: 0
+      pitch: 0
+      source: {fileID: 0}
+      loop: 0
+    highScore: 0
+    seed: 1
 --- !u!1001 &416192133
 PrefabInstance:
   m_ObjectHideFlags: 0

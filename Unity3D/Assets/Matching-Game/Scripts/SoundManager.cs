@@ -10,6 +10,10 @@ public class SoundManager : MonoBehaviour
     public Sound[] music;
     public MatchSong[] songs;
 
+    AudioVisualizer audioVisualiser;
+    //objects that change visually due to audio
+    AudioActivatedObject[] audioObjects;
+
     // Start is called before the first frame update
     private void Awake()
     {
@@ -27,6 +31,11 @@ public class SoundManager : MonoBehaviour
         SetAllSounds(music);
         SetAllSongs(songs);
         //PlayMusic("EDM");
+    }
+
+    private void Update()
+    {
+        UpdateVisualObjects();
     }
 
     void SetAllSounds(Sound[] array)
@@ -123,6 +132,7 @@ public class SoundManager : MonoBehaviour
             return;
         }
         s.song.source.Play();
+        SetAudioVisualizers(s.song);
     }
 
     //Saves score of a song
@@ -147,5 +157,43 @@ public class SoundManager : MonoBehaviour
             return 0;
         }
         return s.highScore;
+    }
+
+    //Setup audio visualisation
+    public void SetAudioVisualizers(Sound song)
+    {
+        if (GetComponent<AudioVisualizer>() != null)
+            audioVisualiser = GetComponent<AudioVisualizer>();
+        else
+        {
+            gameObject.AddComponent<AudioVisualizer>();
+            audioVisualiser = GetComponent<AudioVisualizer>();
+            Debug.Log("Adding audioVisualizer setup for: " + this);
+        }
+
+        //set up audio visualizer
+        audioVisualiser.SetAudioSource(song.source);
+        //
+        audioObjects = FindObjectsOfType<AudioActivatedObject>();
+    }
+
+    void UpdateVisualObjects()
+    {
+        if (audioVisualiser != null)
+        {
+            float[] amps = audioVisualiser.GetBandAmplitudes();
+
+            foreach (AudioActivatedObject obj in audioObjects)
+            {
+                for (int i = 0; i < 8; i++)
+                {
+                    if (obj.GetBand() == i+1)
+                        obj.AlterMaterialEmission(amps[i]);
+                }     
+                
+                if(obj.GetBand() == 0)
+                    obj.AlterMaterialEmission(audioVisualiser.GetMaxBandAmpltiude());
+            }
+        }
     }
 }

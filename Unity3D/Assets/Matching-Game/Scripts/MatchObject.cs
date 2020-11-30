@@ -154,12 +154,12 @@ public class MatchObject : MonoBehaviour
 
         while (transform.lossyScale.magnitude > .05f)
         {
-            Debug.Log("Shrinking");
+            //Debug.Log("Shrinking");
             transform.localScale /= 2f;
             yield return new WaitForSeconds(0.05f);
         }
         Destroy(this.gameObject);
-        Debug.Log("Shrank!");
+        //Debug.Log("Shrank!");
         yield return null;
     }
 }

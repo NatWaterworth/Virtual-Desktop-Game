@@ -9,11 +9,19 @@ public class CFX_AutoRotate : MonoBehaviour
 {
 	// Rotation speed & axis
 	public Vector3 rotation;
+    [SerializeField]
+    bool randomOrrienation;
 	
 	// Rotation space
 	public Space space = Space.Self;
-	
-	void Update()
+
+    private void Start()
+    {
+        if (randomOrrienation)
+            transform.localEulerAngles = Vector3.one * Random.Range(0, 360);
+    }
+
+    void Update()
 	{
 		this.transform.Rotate(rotation * Time.deltaTime, space);
 	}

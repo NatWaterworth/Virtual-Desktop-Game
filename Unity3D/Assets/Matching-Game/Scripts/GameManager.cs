@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+[RequireComponent(typeof(ErrorHandler))]
 public class GameManager : MonoBehaviour
 {
     #region Singleton
@@ -26,33 +27,39 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
+    [Header("GUI")]
     //Score Variables
     [SerializeField]
-    TextMeshProUGUI highScoreText, scoreText, comboText;
+    TextMeshProUGUI highScoreText;
+    [SerializeField]
+    TextMeshProUGUI scoreText;
+    [SerializeField]
+    TextMeshProUGUI comboText;
+
     int highscore, score, combo, firstMultiplier = 4, secondMultiplier = 8, thirdMutliplier = 12;
     float comboMult =1;
 
+    //UI Gameobjects - enable and disable based on state
+    [SerializeField]
+    UIScreen[] menus;
+
+    [Header("Game State")]
+
     [SerializeField]
     GameState currentState;
+
+    [Header("Persistant Objects")]
 
     [SerializeField]
     Transform player;
 
     [SerializeField]
-    [Range(1, 3)]
-    int difficulty;
-
-    [SerializeField]
-    float gameSpeed;
-
-    //UI Gameobjects - enable and disable based on state
-    [SerializeField]
-    UIScreen[] guiScreens;
-
-    [SerializeField]
     Spawner spawner;
 
     string currentSong;
+
+    bool cameraActive = false, pauseTrigger = false; // For when a seperate thread pauses the game
+    ErrorHandler errorHandler;
 
     [System.Serializable]
     struct UIScreen
@@ -79,6 +86,8 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //Assign error handler to manage error cases.
+        errorHandler = GetComponent<ErrorHandler>();
         currentState = GameState.ChooseSong;
         StartLevel();
         //SetupSong("Rock");
@@ -87,12 +96,23 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(pauseTrigger)
+        {
+            PauseGame(true);
+            //reset trigger
+            pauseTrigger = false;
+        }
+
         //This acts as a finite state machine for the players state in the game
         switch (currentState)
         {      
             //Player interacts with the game to achieve a high score whilst the song is playing
             case GameState.Playing:
                 SetUIActiveOnly("HUD");
+
+                //Check if camera active - if disconnected pause game.
+                if (!IsCameraActive())
+                    PauseGame(true);
                 break;
             //An interface that stops game time and allows the player to go back to main menu or resume
             case GameState.PauseMenu:
@@ -121,19 +141,62 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void TriggerPause()
+    {
+        pauseTrigger = true;
+    }
+
     //Set game to paused or play mode
     public void PauseGame(bool paused)
     {
+        if (!(currentState == GameState.Playing || currentState == GameState.PauseMenu))
+        {
+            Debug.LogWarning("Cannot pause/unpause game whilst not playing the game.");
+            return;
+        }
+
         if (paused)
+        {
             Time.timeScale = 0;
+            currentState = GameState.PauseMenu;
+        }
         else
+        {
             Time.timeScale = 1;
+            currentState = GameState.Playing;
+        }
+    }
+
+    //Checks if there is an active camera
+    bool IsCameraActive()
+    {
+        if (!cameraActive)
+        {
+            Debug.LogError("No Active Camera!");
+            SoundManager.instance.PlaySoundEffect("Incorrect");
+            errorHandler.IndicateError("no camera detected. connect camera to continue.");
+            return false;
+        }
+        return true;
+
+    }
+
+    public bool CanPause()
+    {
+        if (currentState == GameState.Playing)
+            return true;
+        return false;
     }
 
     //Sets the level up to play a song
     public void SetupLevel(string song)
     {
+        //Check if camera input is available
+        if(!IsCameraActive())
+            return;
+
         currentState = GameState.Playing;
+        SoundManager.instance.PlaySoundEffect("Correct");
         currentSong = song;
         songSequenceGenerator = PseudoRandomNumberGenerator.instance;
         songSequenceGenerator.ResetSequence();
@@ -142,6 +205,11 @@ public class GameManager : MonoBehaviour
         spawner.SetSpawnerActive(true);
         //delay song
         StartCoroutine(SongIntro());
+    }
+
+    public void GoToSongSelection()
+    {
+
     }
 
     //start a song with a delay to match the input and countdown to song starting
@@ -183,7 +251,7 @@ public class GameManager : MonoBehaviour
 
     void SetUIActiveOnly(string name)
     {
-        foreach(UIScreen screen in guiScreens)
+        foreach(UIScreen screen in menus)
         {
             if (screen.name == name)
                 screen.gui.SetActive(true);
@@ -202,6 +270,11 @@ public class GameManager : MonoBehaviour
     void PlayLevel()
     {
         
+    }
+
+    public void SetCameraActivity(bool activity)
+    {
+        cameraActive = activity;
     }
 
     void StartLevel()

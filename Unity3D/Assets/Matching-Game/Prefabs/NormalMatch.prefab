@@ -215,4 +215,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotate: 0
-  emotion: Normal
+  emotion: Neutral

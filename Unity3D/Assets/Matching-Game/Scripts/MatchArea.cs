@@ -24,12 +24,18 @@ public class MatchArea : MonoBehaviour
     [SerializeField]
     string emotion;
 
+    GameManager manager;
+
     // Start is called before the first frame update
     void Start()
     {
         //Setup port for receiving information
         port = 5065;
-        InitUDP(); 
+        InitUDP();
+        if (GameManager.Instance != null)
+            manager = GameManager.Instance;
+        else
+            Debug.LogError("Game Manager has not been assigned to: " + this);
     }
 
     
@@ -57,6 +63,17 @@ public class MatchArea : MonoBehaviour
                 string text = Encoding.UTF8.GetString(data); //data encoded as utf-8 string format
                 print("OpenCV-Python Information: " + text);
 
+                //Assign ported information to variables in-game usage
+                if (manager != null)
+                {
+                    manager.SetCameraActivity(CheckCamera(text));
+
+                    //only check when games in play
+                    if(manager.CanPause() && GetPauseSignal(text))
+                        manager.TriggerPause();
+                }
+
+                
                 CheckInput(text);
 
             }
@@ -66,6 +83,27 @@ public class MatchArea : MonoBehaviour
             }
         }
     }
+
+    //Checks if camera is avaialble
+    public bool CheckCamera(string message)
+    {
+        if(message == "No Webcam")
+        {
+            return false;
+        }
+        return true;
+    }
+
+    //Checks if game must be paused
+    public bool GetPauseSignal(string message)
+    {
+        if (message == "Pause")
+        {
+            return true;
+        }
+        return false;
+    }
+
 
     //Checks if object matches up with user inputs. E.g. Red input, left side or sad face.
     public bool CheckMatch(MatchObject matchObject)
@@ -111,18 +149,36 @@ public class MatchArea : MonoBehaviour
         {
             sideOfScreen = "Left";
         }
+
+        //check for Emotion position
+        if (text.Contains("Neutral"))
+        {
+            emotion = "Neutral";
+        }
+        else if (text.Contains("Angry"))
+        {
+            emotion = "Angry";
+        }
+        else if (text.Contains("Happy"))
+        {
+            emotion = "Happy";
+        }
+        else if (text.Contains("Surprise"))
+        {
+            emotion = "Surprise";
+        }
     }
 
     // Update is called once per frame
-    void Update()
+   /* void Update()
     {
         //Testing Inputs to ensure matching works.
         //All inputs will be provided by Python port.
 
         //Reset Inputs each frame.
-        colourName = "";
-        sideOfScreen = "";
-        emotion = "";
+        //colourName = "";
+        //sideOfScreen = "";
+        //emotion = "";
 
         //Left side of screen inputs
         if (Input.GetKey(KeyCode.Q))
@@ -161,7 +217,7 @@ public class MatchArea : MonoBehaviour
         //Facial Recognition inputs
         if (Input.GetKey(KeyCode.R))
         {
-            emotion = "Sad";
+            emotion = "Surprised";
         }
         if (Input.GetKey(KeyCode.T))
         {
@@ -176,6 +232,6 @@ public class MatchArea : MonoBehaviour
             emotion = "Normal";
         }
     }
-
+    */
 
 }

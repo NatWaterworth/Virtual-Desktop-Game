@@ -27,7 +27,19 @@ public class Spawner : MonoBehaviour
 
     //Sub spawners to spawn match objects
     [SerializeField]
-    SubSpawner[] subSpawners;
+    SpawnSet[] subSpawners;
+    const int colourSpawner = 0, emotionSpawner = 1;
+
+    int totalWeight;
+
+    [System.Serializable]
+    struct SpawnSet
+    {
+        public SubSpawner spawner;
+        //A value between indicating weight of spawner activity
+        public int weight;
+        public int cummulitiveWeight;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -37,6 +49,20 @@ public class Spawner : MonoBehaviour
         //check player transform has been correctly assigned
         if (player == null)
             Debug.LogError("Player Transform not assigned for:" + this);
+
+        SetTotalSpawnWeight();
+    }
+
+    void SetTotalSpawnWeight()
+    {
+        totalWeight = 0;
+        for(int i =0; i < subSpawners.Length; i++)
+        { 
+            //add spawner weight to total
+            totalWeight += subSpawners[i].weight;
+            //assign new weight to spawner equal to its upper threshold based on all previous spawners weights
+            subSpawners[i].cummulitiveWeight = totalWeight;
+        }
     }
 
     // Update is called once per frame
@@ -50,19 +76,41 @@ public class Spawner : MonoBehaviour
             if (timer >= beat)
             {
                 //Pick random spawn
-                int objectMatchIndex = Random.Range(0, subSpawners.Length);
-                //Spawn Object from one of the spawners - at random.
-                subSpawners[objectMatchIndex].SpawnObject(objectSpeed, player);
+                int objectMatchWeight = Random.Range(0, totalWeight);
+
+                //go through each spawner and check if weight is less than threshold
+                for (int i = 0; i < subSpawners.Length; i++)
+                {
+                    if (subSpawners[i].cummulitiveWeight > objectMatchWeight)
+                    {
+                        //Spawn Object from one of the spawners
+                        subSpawners[i].spawner.SpawnObject(objectSpeed, player);
+                        break;
+                    }
+                }
+                
                 //Reset timer
                 timer = 0;
             }
         }
     }
 
+    public void SetEmotionSpawnerRate(int weight)
+    {
+        subSpawners[emotionSpawner].weight = weight;
+    }
+
+    public void SetColourSpawnerRate(int weight)
+    {
+        subSpawners[colourSpawner].weight = weight;
+    }
+
     //Toggle Spawner ON/OFF
     public void SetSpawnerActive(bool isOn)
     {
-        spawning = isOn;
+        //Set total spawn weight based on the set spawners.
+        SetTotalSpawnWeight();
+        spawning = isOn;     
     }
 
     //Set spawner to match songs beat and object speed

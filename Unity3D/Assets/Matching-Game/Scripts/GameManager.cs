@@ -39,17 +39,22 @@ public class GameManager : MonoBehaviour
     int highscore, score, combo, firstMultiplier = 4, secondMultiplier = 8, thirdMutliplier = 12;
     float comboMult =1;
 
+    int colourMatchWeight = 4,emotionMatchWeight = 2;
+
     //UI Gameobjects - enable and disable based on state
     [SerializeField]
     UIScreen[] menus;
+
+    [Space]
+    [SerializeField]
+    //Toggles for setting which matching methods to use in the game
+    Toggle colourMatchingToggle, emotionMatchingToggle;
 
     [Header("Game State")]
 
     [SerializeField]
     GameState currentState;
 
-    //Toggles for which matching methods to use in the game
-    bool colourMatching, emotionMatching;
 
     [Header("Persistant Objects")]
 
@@ -188,26 +193,26 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void TurnColourMatchingOn(bool on)
+    public void TurnColourMatchingOn(Toggle toggle)
     {
         //ensure at least one matching method is being used
-        if (!emotionMatching && !on)
+        if (!emotionMatchingToggle.isOn && !toggle.isOn)
         {
-            emotionMatching = true;
-            errorHandler.IndicateError("At least one matching method must be used!");
+            emotionMatchingToggle.isOn = true;
+            errorHandler.IndicateError("at least one matching method must be used!");
         }
-        colourMatching = on;
+        colourMatchingToggle.isOn = toggle.isOn;
     }
 
-    public void TurnEmotionMatchingOn(bool on)
+    public void TurnEmotionMatchingOn(Toggle toggle)
     {
         //ensure at least one matching method is being used
-        if (!colourMatching && !on)
+        if (!colourMatchingToggle.isOn && !toggle.isOn)
         {
-            colourMatching = true;
-            errorHandler.IndicateError("At least one matching method must be used!");
+            colourMatchingToggle.isOn = true;
+            errorHandler.IndicateError("at least one matching method must be used!");
         }
-        emotionMatching = on;
+        emotionMatchingToggle.isOn = toggle.isOn;
     }
 
     //Returns True if game is in a pausable state
@@ -232,6 +237,19 @@ public class GameManager : MonoBehaviour
         songSequenceGenerator.ResetSequence();
         MatchSong matchSong = SoundManager.instance.GetMatchSong(currentSong);
         spawner.SetSpawnerForSong(matchSong.objectSpeed, matchSong.beat);
+
+        //Set spawners spawn weights
+        if (emotionMatchingToggle.isOn)
+            spawner.SetEmotionSpawnerRate(emotionMatchWeight);
+        else
+            spawner.SetEmotionSpawnerRate(0);
+
+        if (colourMatchingToggle.isOn)
+            spawner.SetColourSpawnerRate(emotionMatchWeight);
+        else
+            spawner.SetColourSpawnerRate(0);
+
+        //Set spawner to active
         spawner.SetSpawnerActive(true);
         //delay song
         StartCoroutine(SongIntro());

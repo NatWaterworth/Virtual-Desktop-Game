@@ -14,6 +14,9 @@ public class SoundManager : MonoBehaviour
     //objects that change visually due to audio
     AudioActivatedObject[] audioObjects;
 
+    //song currently been played
+    MatchSong currentSong;
+
     // Start is called before the first frame update
     private void Awake()
     {
@@ -31,6 +34,20 @@ public class SoundManager : MonoBehaviour
         SetAllSounds(music);
         SetAllSongs(songs);
         //PlayMusic("EDM");
+    }
+
+    //If a song is playing, pause it
+    public void PauseSong()
+    {
+        if (currentSong != null)
+            currentSong.song.source.Pause();
+    }
+
+    //If a song is paused, play it
+    public void UnPauseSong()
+    {
+        if (currentSong != null)
+            currentSong.song.source.UnPause();
     }
 
     private void Update()
@@ -73,6 +90,8 @@ public class SoundManager : MonoBehaviour
     {
         PlaySound(name, music);
     }
+
+
 
     //Play matching music
     public void PlaySong(string name)
@@ -120,7 +139,7 @@ public class SoundManager : MonoBehaviour
         s.source.Play();
     }
 
-    //Search for a sound to play
+    //Search for a Song to play
     void PlayMatchSong(string name, MatchSong[] songs)
     {
         //Find sound which has name
@@ -132,6 +151,7 @@ public class SoundManager : MonoBehaviour
             return;
         }
         s.song.source.Play();
+        currentSong = s;
         SetAudioVisualizers(s.song);
     }
 

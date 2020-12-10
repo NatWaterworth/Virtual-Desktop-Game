@@ -48,6 +48,9 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     GameState currentState;
 
+    //Toggles for which matching methods to use in the game
+    bool colourMatching, emotionMatching;
+
     [Header("Persistant Objects")]
 
     [SerializeField]
@@ -141,6 +144,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
+
+    //Sets Pause trigger to True. For Seperate Threads to pause game
     public void TriggerPause()
     {
         pauseTrigger = true;
@@ -159,11 +164,13 @@ public class GameManager : MonoBehaviour
         {
             Time.timeScale = 0;
             currentState = GameState.PauseMenu;
+            SoundManager.instance.PauseSong();
         }
         else
         {
             Time.timeScale = 1;
             currentState = GameState.Playing;
+            SoundManager.instance.UnPauseSong();
         }
     }
 
@@ -181,6 +188,29 @@ public class GameManager : MonoBehaviour
 
     }
 
+    public void TurnColourMatchingOn(bool on)
+    {
+        //ensure at least one matching method is being used
+        if (!emotionMatching && !on)
+        {
+            emotionMatching = true;
+            errorHandler.IndicateError("At least one matching method must be used!");
+        }
+        colourMatching = on;
+    }
+
+    public void TurnEmotionMatchingOn(bool on)
+    {
+        //ensure at least one matching method is being used
+        if (!colourMatching && !on)
+        {
+            colourMatching = true;
+            errorHandler.IndicateError("At least one matching method must be used!");
+        }
+        emotionMatching = on;
+    }
+
+    //Returns True if game is in a pausable state
     public bool CanPause()
     {
         if (currentState == GameState.Playing)
@@ -277,6 +307,7 @@ public class GameManager : MonoBehaviour
         cameraActive = activity;
     }
 
+    //Starts level and resets HUD 
     void StartLevel()
     {
         ResetCombo();
@@ -298,6 +329,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    //Increases Score and updates HUD
     public void IncreaseScore(int increase)
     {
         score += Mathf.RoundToInt(increase * comboMult);
@@ -307,22 +339,27 @@ public class GameManager : MonoBehaviour
         IncreaseCombo();
     }
 
+    //Resets combo on HUD
     public void ResetCombo()
     {
         combo = 0;
+        comboText.text = combo.ToString();
     }
 
+    //Reset score on HUD 
     void ResetScore()
     {
         score = 0;
         scoreText.text = score.ToString();
     }
 
+    //Sets highscore on HUD 
     void SetHighScore()
     {
         highScoreText.text = score.ToString();
     }
 
+    //Increments Combo and updates HUD
     void IncreaseCombo()
     {
         combo++;

@@ -32,6 +32,9 @@ public class Spawner : MonoBehaviour
 
     int totalWeight;
 
+    //used to hold spawned objects and destroy them on level reset
+    GameObject objectSpawnHolder;
+
     [System.Serializable]
     struct SpawnSet
     {
@@ -44,13 +47,18 @@ public class Spawner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {    
+        //set player reference
         player = GameManager.Instance.GetPlayerTransform();
+
+        //set spawned object holder
+        objectSpawnHolder = new GameObject("SpawnedObjectHolder");
 
         //check player transform has been correctly assigned
         if (player == null)
             Debug.LogError("Player Transform not assigned for:" + this);
 
         SetTotalSpawnWeight();
+
     }
 
     void SetTotalSpawnWeight()
@@ -84,7 +92,7 @@ public class Spawner : MonoBehaviour
                     if (subSpawners[i].cummulitiveWeight > objectMatchWeight)
                     {
                         //Spawn Object from one of the spawners
-                        subSpawners[i].spawner.SpawnObject(objectSpeed, player);
+                        subSpawners[i].spawner.SpawnObject(objectSpeed, player, objectSpawnHolder.transform);
                         break;
                     }
                 }
@@ -103,6 +111,17 @@ public class Spawner : MonoBehaviour
     public void SetColourSpawnerRate(int weight)
     {
         subSpawners[colourSpawner].weight = weight;
+    }
+
+    //Resets all spawned objects
+    public void ResetSpawner()
+    {
+        MatchObject[] spawnedObjects = objectSpawnHolder.GetComponentsInChildren<MatchObject>();
+        foreach(MatchObject obj in spawnedObjects)
+        {
+            Destroy(obj.gameObject);
+        }
+        timer = 0;
     }
 
     //Toggle Spawner ON/OFF
@@ -124,7 +143,7 @@ public class Spawner : MonoBehaviour
     public float GetSongDelay()
     {
         // time = distance / velocity
-        Debug.Log("delay: " + Vector3.Distance(transform.position, player.transform.position) / objectSpeed + " dis: "+ Vector3.Distance(transform.position, player.transform.position) + "speed: "+ objectSpeed);
+       //Debug.Log("delay: " + Vector3.Distance(transform.position, player.transform.position) / objectSpeed + " dis: "+ Vector3.Distance(transform.position, player.transform.position) + "speed: "+ objectSpeed);
         return Vector3.Distance(transform.position, player.transform.position) / objectSpeed;
     }
 

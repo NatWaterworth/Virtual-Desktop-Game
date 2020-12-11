@@ -22,7 +22,7 @@ public class AudioActivatedObject : MonoBehaviour
 
     public void AlterMaterialEmission(float amplitude)
     {
-        Debug.Log("AMP: "+amplitude*5);
+        //Debug.Log("AMP: "+amplitude*5);
         if (mat != null)
         {
             float h = 360, s = 100, v = 100;

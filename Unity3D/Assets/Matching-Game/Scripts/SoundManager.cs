@@ -36,6 +36,13 @@ public class SoundManager : MonoBehaviour
         //PlayMusic("EDM");
     }
 
+    //Stops Current song being played
+    public void StopSong()
+    {
+        if(currentSong!=null)
+            currentSong.song.source.Stop();
+    }
+
     //If a song is playing, pause it
     public void PauseSong()
     {
@@ -91,7 +98,31 @@ public class SoundManager : MonoBehaviour
         PlaySound(name, music);
     }
 
+    //Stop a sound effect playing
+    public void StopSoundEffect(string name)
+    {
+        //Find sound which has name
+        Sound s = Array.Find(sounds, sound => sound.name == name);
+        if (s == null)
+        {
+            Debug.LogError("No Sound found called: " + name);
+            return;
+        }
+        s.source.Stop();
+    }
 
+    //Stop a song playing
+    public void StopMusic(string name)
+    {
+        //Find sound which has name
+        Sound s = Array.Find(music, sound => sound.name == name);
+        if (s == null)
+        {
+            Debug.LogError("No Music found called: " + name);
+            return;
+        }
+        s.source.Stop();
+    }
 
     //Play matching music
     public void PlaySong(string name)
@@ -136,7 +167,8 @@ public class SoundManager : MonoBehaviour
             Debug.LogError("No Sound found called: " + name);
             return;
         }
-        s.source.Play();
+        if(!s.source.isPlaying)
+            s.source.Play();
     }
 
     //Search for a Song to play
@@ -144,7 +176,7 @@ public class SoundManager : MonoBehaviour
     {
         //Find sound which has name
         MatchSong s = Array.Find(songs, matchSong => matchSong.song.name == name);
-        Debug.Log(s.song.name);
+        //Debug.Log(s.song.name);
         if (s == null)
         {
             Debug.LogError("No Sound found called: " + name);
@@ -188,7 +220,7 @@ public class SoundManager : MonoBehaviour
         {
             gameObject.AddComponent<AudioVisualizer>();
             audioVisualiser = GetComponent<AudioVisualizer>();
-            Debug.Log("Adding audioVisualizer setup for: " + this);
+            //Debug.Log("Adding audioVisualizer setup for: " + this);
         }
 
         //set up audio visualizer

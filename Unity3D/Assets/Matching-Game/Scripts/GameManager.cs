@@ -53,7 +53,7 @@ public class GameManager : MonoBehaviour
     [Header("Game State")]
 
     [SerializeField]
-    GameState currentState;
+    GameState currentState, previousState;
 
 
     [Header("Persistant Objects")]
@@ -62,11 +62,14 @@ public class GameManager : MonoBehaviour
     Transform player;
 
     [SerializeField]
+    MatchArea informationPort;
+
+    [SerializeField]
     Spawner spawner;
 
     string currentSong;
-
-    bool cameraActive = false, pauseTrigger = false; // For when a seperate thread pauses the game
+    [SerializeField]
+    bool cameraActive = false, pauseTrigger = false, playerInput = true; // For when a seperate thread pauses the game
     ErrorHandler errorHandler;
 
     [System.Serializable]
@@ -96,14 +99,19 @@ public class GameManager : MonoBehaviour
     {
         //Assign error handler to manage error cases.
         errorHandler = GetComponent<ErrorHandler>();
-        currentState = GameState.ChooseSong;
-        StartLevel();
+        SwitchState(GameState.MainMenu);
+        ResetHUD();
         //SetupSong("Rock");
     }
 
     // Update is called once per frame
     void Update()
     {
+        //Don't allow input to have an effect on gameplay when set to false
+        if (!playerInput)
+            return;
+
+        //Checks if pause has been triggered by parallel thread
         if(pauseTrigger)
         {
             PauseGame(true);
@@ -111,16 +119,86 @@ public class GameManager : MonoBehaviour
             pauseTrigger = false;
         }
 
+        //Go Back Button
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            BackButton();
+        }
+
         //This acts as a finite state machine for the players state in the game
         switch (currentState)
         {      
             //Player interacts with the game to achieve a high score whilst the song is playing
             case GameState.Playing:
-                SetUIActiveOnly("HUD");
-
                 //Check if camera active - if disconnected pause game.
-                if (!IsCameraActive())
+                if (!IsCameraActive() || !informationPort.IsOpenCVActive())
                     PauseGame(true);
+                break;
+            //An interface that stops game time and allows the player to go back to main menu or resume
+            case GameState.PauseMenu:
+                break;
+            //An interface where the player can navigate to other states
+            case GameState.MainMenu:
+                break;
+            //When the song is complete the player's score is highlighted and given a ranking
+            case GameState.EndOfLevel:
+                break;
+            //An interface that instructs the player how to play the game
+            case GameState.Controls:
+                break;
+            //Player can change sound levels with AR marker detection
+            case GameState.Settings:
+                break;
+            //Player chooses a song to play the game
+            case GameState.ChooseSong:
+                break;
+        }
+    }
+
+    //Takes player to the previous state or pauses the game in play mode.
+    void BackButton()
+    {
+        if(currentState == GameState.PauseMenu)
+        {
+            PauseGame(false);
+        }
+        else if (currentState == GameState.Playing)
+        {
+            PauseGame(true);
+        }
+        else if (currentState == GameState.MainMenu)
+        {
+            //we don't want to go back from this point as its the root
+            return;
+        }
+        else if (currentState == GameState.EndOfLevel)
+        {
+            //ensure back button takes you back to main menu
+            SwitchState(GameState.MainMenu);
+        }
+        else
+            SwitchState(previousState);
+    }
+
+
+    //Switches state
+    void SwitchState(GameState state)
+    {
+        //Confirmation Sound
+        SoundManager.instance.PlaySoundEffect("Click");
+
+        //assign previous state
+        previousState = currentState;
+        //assign new state
+        currentState = state;
+
+        //apply appropriate UI to match state
+        switch (currentState)
+        {
+            //Player interacts with the game to achieve a high score whilst the song is playing
+            case GameState.Playing:
+                SoundManager.instance.StopMusic("MenuMusic");
+                SetUIActiveOnly("HUD");
                 break;
             //An interface that stops game time and allows the player to go back to main menu or resume
             case GameState.PauseMenu:
@@ -128,15 +206,17 @@ public class GameManager : MonoBehaviour
                 break;
             //An interface where the player can navigate to other states
             case GameState.MainMenu:
+                SoundManager.instance.PlayMusic("MenuMusic");
                 SetUIActiveOnly("Main Menu");
                 break;
             //When the song is complete the player's score is highlighted and given a ranking
             case GameState.EndOfLevel:
+                SoundManager.instance.PlayMusic("MenuMusic");
                 SetUIActiveOnly("Results");
                 break;
             //An interface that instructs the player how to play the game
             case GameState.Controls:
-                SetUIActiveOnly("HowToPlay");
+                SetUIActiveOnly("How To Play");
                 break;
             //Player can change sound levels with AR marker detection
             case GameState.Settings:
@@ -149,6 +229,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    //Restarts level erasing any current score and resetting to score to 0
+    public void RestartLevel()
+    {
+        //reset score
+        SetupLevel(currentSong);
+    }
 
     //Sets Pause trigger to True. For Seperate Threads to pause game
     public void TriggerPause()
@@ -168,13 +254,13 @@ public class GameManager : MonoBehaviour
         if (paused)
         {
             Time.timeScale = 0;
-            currentState = GameState.PauseMenu;
+            SwitchState(GameState.PauseMenu);
             SoundManager.instance.PauseSong();
         }
         else
         {
             Time.timeScale = 1;
-            currentState = GameState.Playing;
+            SwitchState(GameState.Playing);
             SoundManager.instance.UnPauseSong();
         }
     }
@@ -191,6 +277,25 @@ public class GameManager : MonoBehaviour
         }
         return true;
 
+    }
+
+    bool IsOpenCVConnected()
+    {
+        if(informationPort == null)
+        {
+            Debug.LogError("information port not set for game manager!");
+            SoundManager.instance.PlaySoundEffect("Incorrect");
+            errorHandler.IndicateError("information port not set for game manager!");
+            return false;
+        }
+        if (!informationPort.IsOpenCVActive())
+        {
+            Debug.LogError("Python environment not active!");
+            SoundManager.instance.PlaySoundEffect("Incorrect");
+            errorHandler.IndicateError("opencv application is not running.");
+            return false;
+        }
+        return true;
     }
 
     public void TurnColourMatchingOn(Toggle toggle)
@@ -226,11 +331,24 @@ public class GameManager : MonoBehaviour
     //Sets the level up to play a song
     public void SetupLevel(string song)
     {
-        //Check if camera input is available
-        if(!IsCameraActive())
+        //Check if openCV-Python has connected by detecting inputs from port
+        if (!IsOpenCVConnected())
             return;
 
-        currentState = GameState.Playing;
+        //Check if camera input is available
+        if (!IsCameraActive())
+            return;
+
+        //Reset UI to  values
+        ResetHUD();
+
+        //Set current state
+        SwitchState(GameState.Playing);
+
+        //Ensure game is not paused
+        PauseGame(false);
+
+      
         SoundManager.instance.PlaySoundEffect("Correct");
         currentSong = song;
         songSequenceGenerator = PseudoRandomNumberGenerator.instance;
@@ -249,6 +367,8 @@ public class GameManager : MonoBehaviour
         else
             spawner.SetColourSpawnerRate(0);
 
+        //Reset spawner
+        spawner.ResetSpawner();
         //Set spawner to active
         spawner.SetSpawnerActive(true);
         //delay song
@@ -257,31 +377,50 @@ public class GameManager : MonoBehaviour
 
     public void GoToSongSelection()
     {
-
+        SwitchState(GameState.ChooseSong);
     }
 
     //start a song with a delay to match the input and countdown to song starting
     IEnumerator SongIntro()
     {
+        
+        //ensure song is not already playing.
+        SoundManager.instance.StopSong();
+
         if (spawner != null && SoundManager.instance!=null)
         {
+            //stop player from pausing during countdown sounds remained synced
+            playerInput = false;
+
             float delay = spawner.GetSongDelay() + SoundManager.instance.GetMatchSong(currentSong).songDelay;
             SoundManager.instance.PlaySoundEffect("Intro");
             //Countdown
+            Debug.Log("Play Intro!");
             yield return new WaitForSeconds(delay / 4);
-            SoundManager.instance.PlaySoundEffect("Countdown");
-            yield return new WaitForSeconds(delay / 4);
-            SoundManager.instance.PlaySoundEffect("Countdown");
-            yield return new WaitForSeconds(delay / 4);
-            SoundManager.instance.PlaySoundEffect("Countdown");
-            yield return new WaitForSeconds(delay / 4);
+            for(int i =0; i < 3; i++)
+            {
+                Debug.Log("Play Countdown!");
+                SoundManager.instance.PlaySoundEffect("Countdown");
+                yield return new WaitForSeconds(delay / 4);
+            }
+            Debug.Log("Countdown Over!");
             SoundManager.instance.PlaySoundEffect("CountdownOver");
+
+            //allow player input again
+            playerInput = true;
 
             //Play song after delay to sync with match objects
             SoundManager.instance.PlaySong(currentSong);       
             //Stop match objects spawning when song stops
             yield return new WaitForSeconds(SoundManager.instance.GetSongLength(currentSong)- (spawner.GetSongDelay()));
             spawner.SetSpawnerActive(false);
+
+            yield return new WaitForSeconds(spawner.GetSongDelay());
+            SoundManager.instance.PlaySoundEffect("Victory");
+            //Small delay before end of level
+            yield return new WaitForSeconds(delay/2);
+            SoundManager.instance.PlaySoundEffect("EndLevel");
+            EndOfLevel();
 
         }
         else
@@ -308,32 +447,43 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    //Spawns an object much the player must match up with the correct input
-    void SpawnMatchObject()
-    {
-
-    }
-
-    //Tick function - 
-    void PlayLevel()
-    {
-        
-    }
-
     public void SetCameraActivity(bool activity)
     {
         cameraActive = activity;
     }
 
-    //Starts level and resets HUD 
-    void StartLevel()
+    //Resets HUD 
+    void ResetHUD()
     {
         ResetCombo();
         ResetScore();
         SetHighScore();
     }
 
+    public void GoToSettings()
+    {
+        SwitchState(GameState.Settings);
+    }
 
+    public void GoToMainMenu()
+    {
+        SwitchState(GameState.MainMenu);
+    }
+
+    public void GoToControls()
+    {
+        SwitchState(GameState.Controls);
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
+    public void EndOfLevel()
+    {
+        SwitchState(GameState.EndOfLevel);
+    }
 
     //Return Transform of Player
     public Transform GetPlayerTransform()

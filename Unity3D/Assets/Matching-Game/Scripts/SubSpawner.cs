@@ -36,7 +36,7 @@ public class SubSpawner : MonoBehaviour
     }
 
     /*Spawns an object in the game*/
-    public void SpawnObject(float objectSpeed, Transform player)
+    public void SpawnObject(float objectSpeed, Transform player, Transform parent)
     {
         //set spawn position and match object type using seed for current song.
         //objectMatchIndex = Random.Range(0, matchObjects.Length);
@@ -48,7 +48,7 @@ public class SubSpawner : MonoBehaviour
             objectMatchSpawnPos = PseudoRandomNumberGenerator.instance.GetRandomNumber() % spawnPositions.Length;
     }
         //spawn object
-        MatchObject obj = Instantiate(matchObjects[objectMatchIndex], spawnPositions[objectMatchSpawnPos].spawnPositions.position, Quaternion.LookRotation(-player.transform.position,Vector3.up), null);
+        MatchObject obj = Instantiate(matchObjects[objectMatchIndex], spawnPositions[objectMatchSpawnPos].spawnPositions.position, Quaternion.LookRotation(-player.transform.position,Vector3.up), parent);
         obj.SetSpeed(objectSpeed);
         obj.SetDirection(player.position - this.transform.position);
 

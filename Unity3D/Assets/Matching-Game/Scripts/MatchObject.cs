@@ -86,7 +86,7 @@ public class MatchObject : MonoBehaviour
                 SuccessfulMatch();
 
                 beenMatched = true;
-                Debug.Log("Matched!");
+                //Debug.Log("Matched!");
             }
 
         }

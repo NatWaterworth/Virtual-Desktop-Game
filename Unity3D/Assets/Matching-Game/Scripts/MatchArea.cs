@@ -25,6 +25,7 @@ public class MatchArea : MonoBehaviour
     string emotion;
 
     GameManager manager;
+    bool connectedOpenCV = false;
 
     // Start is called before the first frame update
     void Start()
@@ -43,7 +44,6 @@ public class MatchArea : MonoBehaviour
     private void InitUDP()
     {
         print("UDP Initialized");
-
         receiveThread = new Thread(new ThreadStart(ReceiveData));
         receiveThread.IsBackground = true; //Runs parallel to the game
         receiveThread.Start();
@@ -56,12 +56,14 @@ public class MatchArea : MonoBehaviour
         while (true) //set to variable if you don't want data to be recieved.
         {
             try
-            {
+            {               
                 IPEndPoint anyIP = new IPEndPoint(IPAddress.Parse("0.0.0.0"), port); //where inputs are declared
                 byte[] data = client.Receive(ref anyIP); //data recieved stored in binary form
 
                 string text = Encoding.UTF8.GetString(data); //data encoded as utf-8 string format
-                print("OpenCV-Python Information: " + text);
+                //print("OpenCV-Python Information: " + text);
+                //Set to connected as input is being recieved
+                connectedOpenCV = true;
 
                 //Assign ported information to variables in-game usage
                 if (manager != null)
@@ -72,16 +74,22 @@ public class MatchArea : MonoBehaviour
                     if(manager.CanPause() && GetPauseSignal(text))
                         manager.TriggerPause();
                 }
-
                 
                 CheckInput(text);
-
             }
             catch (Exception e)
             {
                 print(e.ToString()); //log exceptions to console
+                connectedOpenCV = false;
             }
         }
+    }
+
+    //Checks if openCV inputs are being recieved in port
+    public bool IsOpenCVActive()
+    {
+        //Debug.Log("connected: " + connectedOpenCV);
+        return connectedOpenCV;
     }
 
     //Checks if camera is avaialble
@@ -98,6 +106,16 @@ public class MatchArea : MonoBehaviour
     public bool GetPauseSignal(string message)
     {
         if (message == "Pause")
+        {
+            return true;
+        }
+        return false;
+    }
+
+    //Checks if game must be paused
+    public bool GetUnPauseSignal(string message)
+    {
+        if (message == "UnPause")
         {
             return true;
         }

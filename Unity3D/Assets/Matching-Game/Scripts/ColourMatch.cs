@@ -33,7 +33,7 @@ public class ColourMatch : MatchObject
         base.OnTriggerStay(other);
         if (other.GetComponent<MatchArea>())
         {
-            Debug.Log("Colour: "+colourName+ ".  Side: "+sideOfScreen);
+           // Debug.Log("Colour: "+colourName+ ".  Side: "+sideOfScreen);
         }
     }
 

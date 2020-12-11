@@ -6,6 +6,26 @@ using TMPro;
 
 public class ErrorHandler : MonoBehaviour
 {
+    #region Singleton
+
+    public static ErrorHandler Instance { get; private set; }
+
+    public void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Debug.LogError("Cannot be more than 1 instance of a singleton object: " + this);
+            Destroy(gameObject);
+        }
+    }
+
+    #endregion
+
     //The only error accounted for so far.
     string errorMessage = "";
     bool indicatorActive = false;

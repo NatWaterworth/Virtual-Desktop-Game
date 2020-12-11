@@ -6,11 +6,14 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using TMPro;
 
 //Checks player inputs for matching with match objects
 public class MatchArea : MonoBehaviour
 {
-    
+    //For Testing Build...
+    [SerializeField]
+    TextMeshProUGUI error;
     //Port vairables - Unity <-> Python
     Thread receiveThread; 
     UdpClient client; 
@@ -23,6 +26,8 @@ public class MatchArea : MonoBehaviour
     string sideOfScreen;
     [SerializeField]
     string emotion;
+
+    string message;
 
     GameManager manager;
     bool connectedOpenCV = false;
@@ -39,7 +44,11 @@ public class MatchArea : MonoBehaviour
             Debug.LogError("Game Manager has not been assigned to: " + this);
     }
 
-    
+    private void Update()
+    {
+        //error.text = message;
+    }
+
     //Initialises Thread to run parallel to the game
     private void InitUDP()
     {
@@ -47,6 +56,7 @@ public class MatchArea : MonoBehaviour
         receiveThread = new Thread(new ThreadStart(ReceiveData));
         receiveThread.IsBackground = true; //Runs parallel to the game
         receiveThread.Start();
+        message = "Initializing UDP";
     }
 
     //Recieves information from port on a thread running parallel to the game.
@@ -64,7 +74,7 @@ public class MatchArea : MonoBehaviour
                 //print("OpenCV-Python Information: " + text);
                 //Set to connected as input is being recieved
                 connectedOpenCV = true;
-
+                message = text;
                 //Assign ported information to variables in-game usage
                 if (manager != null)
                 {
@@ -81,6 +91,7 @@ public class MatchArea : MonoBehaviour
             {
                 print(e.ToString()); //log exceptions to console
                 connectedOpenCV = false;
+                message = e.ToString();
             }
         }
     }

@@ -154,61 +154,61 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 12104}
     - Class: 114
-      Script: {instanceID: 12110}
+      Script: {instanceID: 12108}
     - Class: 114
-      Script: {instanceID: 12292}
+      Script: {instanceID: 12290}
     - Class: 114
-      Script: {instanceID: 12382}
+      Script: {instanceID: 12380}
     - Class: 114
-      Script: {instanceID: 12410}
+      Script: {instanceID: 12408}
     - Class: 114
-      Script: {instanceID: 12420}
+      Script: {instanceID: 12418}
     - Class: 114
-      Script: {instanceID: 12446}
+      Script: {instanceID: 12444}
     - Class: 114
-      Script: {instanceID: 12640}
+      Script: {instanceID: 12638}
     - Class: 114
-      Script: {instanceID: 12664}
+      Script: {instanceID: 12662}
     - Class: 114
-      Script: {instanceID: 12692}
+      Script: {instanceID: 12690}
     - Class: 114
-      Script: {instanceID: 12886}
+      Script: {instanceID: 12884}
     - Class: 114
-      Script: {instanceID: 12910}
+      Script: {instanceID: 12908}
     - Class: 114
-      Script: {instanceID: 12958}
+      Script: {instanceID: 12956}
     - Class: 114
-      Script: {instanceID: 13152}
+      Script: {instanceID: 13150}
     - Class: 114
-      Script: {instanceID: 13270}
+      Script: {instanceID: 13268}
     - Class: 114
-      Script: {instanceID: 13340}
+      Script: {instanceID: 13338}
     - Class: 114
-      Script: {instanceID: 13414}
+      Script: {instanceID: 13412}
     - Class: 114
-      Script: {instanceID: 13570}
+      Script: {instanceID: 13568}
     - Class: 114
-      Script: {instanceID: 13636}
+      Script: {instanceID: 13634}
     - Class: 114
-      Script: {instanceID: 13698}
+      Script: {instanceID: 13696}
     - Class: 114
-      Script: {instanceID: 13850}
+      Script: {instanceID: 13848}
     - Class: 114
-      Script: {instanceID: 13976}
+      Script: {instanceID: 13974}
     - Class: 114
-      Script: {instanceID: 14030}
+      Script: {instanceID: 14028}
     - Class: 114
-      Script: {instanceID: 14104}
+      Script: {instanceID: 14102}
     - Class: 114
-      Script: {instanceID: 14150}
+      Script: {instanceID: 14148}
     - Class: 114
-      Script: {instanceID: 14206}
+      Script: {instanceID: 14204}
     - Class: 114
-      Script: {instanceID: 14246}
+      Script: {instanceID: 14244}
     - Class: 114
-      Script: {instanceID: 14296}
+      Script: {instanceID: 14294}
     - Class: 114
-      Script: {instanceID: 14318}
+      Script: {instanceID: 14316}
     - Class: 114
       Script: {instanceID: 14578}
     - Class: 114
@@ -668,7 +668,7 @@ ScriptsOnlyBuild:
     className: AnimationPlayableAsset
   - hash:
       serializedVersion: 2
-      Hash: dbc3f636010819423278925d63b66934
+      Hash: 789edfd62f0a33643c1e2c97ef444efa
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: GameManager
@@ -882,6 +882,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.TestRunner.dll
     namespaceName: UnityEngine.TestTools.TestRunner.Callbacks
     className: RemoteTestResultSender
+  - hash:
+      serializedVersion: 2
+      Hash: cdc1fbcf9583c6002ceff29e5ea23422
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: CameraController
   - hash:
       serializedVersion: 2
       Hash: 660deb0ce569359218f0ba85b7ce0e3a
@@ -1460,10 +1466,10 @@ ScriptsOnlyBuild:
     className: PlayableTrack
   - hash:
       serializedVersion: 2
-      Hash: cdc1fbcf9583c6002ceff29e5ea23422
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
-    className: CameraController
+    className: SongScore
   platform: 19
   scenePathNames:
   - Assets/Matching-Game/Scenes/GameLevel.unity

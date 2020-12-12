@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour
     GameState currentState, previousState, nextState;
 
     float playTime = 0;
+    GameData data; //for storing saved information
 
     #region GUI
     [Header("GUI")]
@@ -44,7 +45,13 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     TextMeshProUGUI comboText;
 
-    int highscore, score, combo, firstMultiplier = 4, secondMultiplier = 8, thirdMutliplier = 12;
+    [SerializeField]
+    TextMeshProUGUI[] scores;
+
+    [SerializeField]
+    TextMeshProUGUI resultsScoreText, resultsComboText;
+
+    int highscore, score, combo,maxCombo, firstMultiplier = 4, secondMultiplier = 8, thirdMutliplier = 12;
     float comboMult =1;
 
     int colourMatchWeight = 4,emotionMatchWeight = 2;
@@ -128,7 +135,26 @@ public class GameManager : MonoBehaviour
         //SetNewState(GameState.MainMenu);
         ResetHUD();
         //SetupSong("Rock");
-       
+
+        RefreshScoreUI();
+    }
+
+    //updates songs scores on song choice page
+    void RefreshScoreUI()
+    {
+        if (resultsComboText != null)
+            resultsComboText.text = maxCombo.ToString();
+
+        if (resultsScoreText != null)
+            resultsScoreText.text = score.ToString();
+
+        //Assign saved scores to the 3 songs
+        data = SaveSystem.LoadSongData();
+        if (data!=null){
+            scores[0].text = data.songHighScore[0].ToString();
+            scores[1].text = data.songHighScore[1].ToString();
+            scores[2].text = data.songHighScore[2].ToString();
+        }
     }
 
     // Update is called once per frame
@@ -497,10 +523,17 @@ public class GameManager : MonoBehaviour
     void PlayingGame()
     {
         playTime += Time.deltaTime;
-        Debug.Log("playtime: " + playTime +" songLength: "+ SoundManager.instance.GetSongLength(currentSong)+ " song delay: "+ spawner.GetSongDelay());
+        //Debug.Log("playtime: " + playTime +" songLength: "+ SoundManager.instance.GetSongLength(currentSong)+ " song delay: "+ spawner.GetSongDelay());
 
         if (playTime >= SoundManager.instance.GetSongLength(currentSong))
         {
+            Debug.Log("high score: " + highscore);
+            //Save song score
+            SoundManager.instance.AssignSongScore(currentSong, highscore);
+
+            //Update songs score list and results page
+            RefreshScoreUI();
+
             StartCoroutine(SongEnd());
         }
         else if (playTime >= SoundManager.instance.GetSongLength(currentSong) - (spawner.GetSongDelay()))
@@ -586,7 +619,10 @@ public class GameManager : MonoBehaviour
         score += Mathf.RoundToInt(increase * comboMult);
         scoreText.text = score.ToString();
         if (score >= highscore)
-            highScoreText.text = score.ToString();
+        {
+            highscore = score;
+            SetHighScore();
+        }
         IncreaseCombo();
     }
 
@@ -594,6 +630,7 @@ public class GameManager : MonoBehaviour
     public void ResetCombo()
     {
         combo = 0;
+        maxCombo = 0;
         comboText.text = combo.ToString();
     }
 
@@ -607,7 +644,7 @@ public class GameManager : MonoBehaviour
     //Sets highscore on HUD 
     void SetHighScore()
     {
-        highScoreText.text = score.ToString();
+        highScoreText.text = highscore.ToString();
     }
 
     //Increments Combo and updates HUD
@@ -615,7 +652,7 @@ public class GameManager : MonoBehaviour
     {
         combo++;
         comboText.text = combo.ToString();
-
+        maxCombo = Mathf.Max(combo, maxCombo);
 
         if (combo == firstMultiplier)
         {

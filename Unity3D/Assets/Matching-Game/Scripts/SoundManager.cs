@@ -229,6 +229,23 @@ public class SoundManager : MonoBehaviour
         audioObjects = FindObjectsOfType<AudioActivatedObject>();
     }
 
+    //Assign a score to a song and save it
+    public void AssignSongScore(string songName, int score)
+    {
+        //Find sound which has name
+        MatchSong s = Array.Find(songs, matchSong => matchSong.song.name == songName);
+        //Debug.Log(s.song.name);
+        if (s == null)
+        {
+            Debug.LogError("No Sound found called: " + songName);
+            return;
+        }
+        Debug.Log("Setting score: " + score);
+        s.highScore = score;
+        Debug.Log(s +" score: " + s.highScore);
+        SaveSystem.SaveSongInfo(songs);
+    }
+
     void UpdateVisualObjects()
     {
         if (audioVisualiser != null)

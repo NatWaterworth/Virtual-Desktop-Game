@@ -8,6 +8,9 @@ public class AudioActivatedObject : MonoBehaviour
     Material mat;
 
     [SerializeField]
+    Color colour = Color.red;
+
+    [SerializeField]
     [Range(0, 8)]
     int frequencyBand; 
     // Start is called before the first frame update
@@ -28,7 +31,7 @@ public class AudioActivatedObject : MonoBehaviour
             float h = 360, s = 100, v = 100;
             //Color.RGBToHSV(mat.GetColor("_EmissionColor"),out h,out s, out v);
 
-            mat.SetColor("_EmissionColor", Color.red*amplitude*5);
+            mat.SetColor("_EmissionColor", colour * amplitude*5);
         }
     }
 

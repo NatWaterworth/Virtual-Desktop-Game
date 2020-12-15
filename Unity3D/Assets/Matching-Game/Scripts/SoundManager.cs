@@ -59,6 +59,7 @@ public class SoundManager : MonoBehaviour
 
     private void Update()
     {
+        Debug.Log("Update Visual Objects");
         UpdateVisualObjects();
     }
 
@@ -95,7 +96,17 @@ public class SoundManager : MonoBehaviour
     //Play specified music
     public void PlayMusic(string name)
     {
-        PlaySound(name, music);
+        //Find sound which has name
+        Sound s = Array.Find(music, sound => sound.name == name);
+        if (s == null)
+        {
+            Debug.LogError("No Sound found called: " + name);
+            return;
+        }
+        if (!s.source.isPlaying)
+            s.source.Play();
+
+        SetAudioVisualizers(s);
     }
 
     //Stop a sound effect playing
@@ -225,8 +236,10 @@ public class SoundManager : MonoBehaviour
 
         //set up audio visualizer
         audioVisualiser.SetAudioSource(song.source);
-        //
-        audioObjects = FindObjectsOfType<AudioActivatedObject>();
+        
+        //Don't set if already been set
+        if(audioObjects == null)
+            audioObjects = FindObjectsOfType<AudioActivatedObject>();
     }
 
     //Assign a score to a song and save it
@@ -246,6 +259,7 @@ public class SoundManager : MonoBehaviour
         SaveSystem.SaveSongInfo(songs);
     }
 
+    //set object emission intensities to match the amplitude of the frequency band it is in
     void UpdateVisualObjects()
     {
         if (audioVisualiser != null)

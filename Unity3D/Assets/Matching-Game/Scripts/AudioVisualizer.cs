@@ -62,7 +62,7 @@ public class AudioVisualizer : MonoBehaviour
             if (frequencyBand[g] > bandBuffer[g])
             {         
                 bandBuffer[g] = frequencyBand[g];
-                bufferDecrease[g] = 0.005f;
+                bufferDecrease[g] = 0.001f;
             }
             if (frequencyBand[g] < bandBuffer[g])
             {
